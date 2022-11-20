@@ -15,6 +15,7 @@ function App() {
 
   const handleNuevoGasto = () => {
     setModal(true);
+    setGastoEditar({})
     setTimeout(() => {
       setAnimarModal(true);
     }, 400);
@@ -26,6 +27,7 @@ function App() {
       //busca por el id y si existe reemplaza los datos 
       const gastosActualizados = gastos.map( gastoState => gastoState.id === gasto.id ? gasto : gastoState)
       setGastos(gastosActualizados)
+      setGastoEditar({})
     }else {
       //Nuevo gasto
       gasto.id = generarId();
@@ -47,6 +49,11 @@ function App() {
     }
   }, [gastoEditar]);
 
+  const eliminarGasto = id => {
+    const gastosACtualizados = gastos.filter( gasto => gasto.id !== id)
+    setGastos(gastosACtualizados)
+  }
+
   return (
     <div className={modal ? "fijar" : ""}>
       <Header
@@ -59,7 +66,7 @@ function App() {
       {isValidPresupuesto ? (
         <>
           <main>
-            <ListadoGastos gastos={gastos} setGastoEditar={setGastoEditar} />
+            <ListadoGastos gastos={gastos} setGastoEditar={setGastoEditar} eliminarGasto={eliminarGasto} />
           </main>
           <div className="nuevo-gasto">
             <img
@@ -78,6 +85,7 @@ function App() {
           setAnimarModal={setAnimarModal}
           guardarGasto={guardarGasto}
           gastoEditar={gastoEditar}
+          setGastoEditar={setGastoEditar}
         />
       )}
     </div>
