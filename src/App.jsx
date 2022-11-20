@@ -6,11 +6,15 @@ import { generarId } from "./helpers";
 import ListadoGastos from "./components/ListadoGastos";
 
 function App() {
-  const [presupuesto, setPresupuesto] = useState(0);
+  const [presupuesto, setPresupuesto] = useState(
+    Number(localStorage.getItem('presupuesto') ?? 0)
+  );
   const [isValidPresupuesto, setIsValidPresupuesto] = useState(false);
   const [modal, setModal] = useState(false);
   const [animarModal, setAnimarModal] = useState(false);
-  const [gastos, setGastos] = useState([]);
+  const [gastos, setGastos] = useState(
+    localStorage.getItem('gastos') ? JSON.parse(localStorage.getItem('gastos')) : []
+  );
   const [gastoEditar, setGastoEditar] = useState({});
 
   const handleNuevoGasto = () => {
@@ -53,6 +57,22 @@ function App() {
     const gastosACtualizados = gastos.filter( gasto => gasto.id !== id)
     setGastos(gastosACtualizados)
   }
+
+
+  useEffect( () => {
+    localStorage.setItem('presupuesto', presupuesto ?? 0)
+  }, [presupuesto])
+
+  useEffect(() => {
+    const presupuestoLS = Number(localStorage.getItem('presupuesto')) ?? 0
+    if(presupuestoLS > 0) {
+      setIsValidPresupuesto(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('gastos', JSON.stringify(gastos) ?? [])
+  }, [gastos])
 
   return (
     <div className={modal ? "fijar" : ""}>
